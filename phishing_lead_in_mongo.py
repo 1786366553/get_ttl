@@ -62,8 +62,7 @@ def lead_in_mongo(time_limit_left,time_limit_right):
 if __name__ == "__main__":
     nowtime = str(now_date())[0:19]
     gettime = str(get_date(7))[0:19]
-    lead_in_mongo(gettime, nowtime)
-    # schedule.every().tuesday.at("08:00").do(lead_in_mongo(gettime, nowtime))
-    # while True:
-    #     schedule.run_pending()
-    #     time.sleep(1)
+    schedule.every().tuesday.at("08:00").do(lead_in_mongo(gettime, nowtime))
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
