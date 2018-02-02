@@ -1,6 +1,8 @@
 #-*- coding: UTF-8 -*-
 import pymongo
 import fetch_dns_ttl
+import re
+import threading
 
 
 def get_domain_info(domain):
@@ -103,11 +105,12 @@ def mongo_update_cname(collection,data,list_cname):
         return
 
 
-def mongo_handle():
+def mongo_handle_1():
     connection = pymongo.MongoClient('172.29.152.152', 27017)
     db = connection.malicious_domain_get_system
     collection = db.malicious_domain_info
-    for data in collection.find():
+    refind = re.compile('^[0123456789abcdef].*')
+    for data in collection.find({'domain':refind}):
         domain = data['domain']
         domain_info = get_domain_info(domain)
         list_a = list_create_a(domain_info)
@@ -118,6 +121,69 @@ def mongo_handle():
         mongo_update_cname(collection, data, list_cname)
 
 
+def mongo_handle_2():
+    connection = pymongo.MongoClient('172.29.152.152', 27017)
+    db = connection.malicious_domain_get_system
+    collection = db.malicious_domain_info
+    refind = re.compile('^[ghijkl].*')
+    for data in collection.find({'domain':refind}):
+        domain = data['domain']
+        domain_info = get_domain_info(domain)
+        list_a = list_create_a(domain_info)
+        list_ns = list_create_ns(domain_info)
+        list_cname = list_create_cname(domain_info)
+        mongo_update_a(collection, data, list_a)
+        mongo_update_ns(collection, data, list_ns)
+        mongo_update_cname(collection, data, list_cname)
+
+
+def mongo_handle_3():
+    connection = pymongo.MongoClient('172.29.152.152', 27017)
+    db = connection.malicious_domain_get_system
+    collection = db.malicious_domain_info
+    refind = re.compile('^[mnopqrs].*')
+    for data in collection.find({'domain':refind}):
+        domain = data['domain']
+        domain_info = get_domain_info(domain)
+        list_a = list_create_a(domain_info)
+        list_ns = list_create_ns(domain_info)
+        list_cname = list_create_cname(domain_info)
+        mongo_update_a(collection, data, list_a)
+        mongo_update_ns(collection, data, list_ns)
+        mongo_update_cname(collection, data, list_cname)
+
+
+def mongo_handle_4():
+    connection = pymongo.MongoClient('172.29.152.152', 27017)
+    db = connection.malicious_domain_get_system
+    collection = db.malicious_domain_info
+    refind = re.compile('^[tuvwxyz].*')
+    for data in collection.find({'domain':refind}):
+        domain = data['domain']
+        domain_info = get_domain_info(domain)
+        list_a = list_create_a(domain_info)
+        list_ns = list_create_ns(domain_info)
+        list_cname = list_create_cname(domain_info)
+        mongo_update_a(collection, data, list_a)
+        mongo_update_ns(collection, data, list_ns)
+        mongo_update_cname(collection, data, list_cname)
+
+
+threads = []
+t1 = threading.Thread(target=mongo_handle_1)
+threads.append(t1)
+t2 = threading.Thread(target=mongo_handle_2)
+threads.append(t2)
+t3 = threading.Thread(target=mongo_handle_3)
+threads.append(t3)
+t4 = threading.Thread(target=mongo_handle_4)
+threads.append(t4)
+
+
 if __name__ == "__main__":
     while(1):
-        mongo_handle()
+        for t in threads:
+            t.setDaemon(True)
+            t.start()
+        for t in threads:
+            t.join()
