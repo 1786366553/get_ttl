@@ -8,15 +8,10 @@ from datetime import timedelta
 import schedule
 
 
-def get_date(days):
-    return datetime.now() - timedelta(days=days)
-
-
-def now_date():
-    return datetime.now()
-
-
-def lead_in_mongo(time_limit_left,time_limit_right):
+def lead_in_mongo():
+    print 111111
+    time_limit_left = str(datetime.now() - timedelta(days=7))[0:19]
+    time_limit_right = str(datetime.now())[0:19]
     timeArray_limit_left = time.strptime(time_limit_left, "%Y-%m-%d %H:%M:%S")
     timeStamp_limit_left = int(time.mktime(timeArray_limit_left))
     timeArray_limit_right = time.strptime(time_limit_right, "%Y-%m-%d %H:%M:%S")
@@ -60,9 +55,7 @@ def lead_in_mongo(time_limit_left,time_limit_right):
 
 
 if __name__ == "__main__":
-    nowtime = str(now_date())[0:19]
-    gettime = str(get_date(7))[0:19]
-    schedule.every().tuesday.at("08:00").do(lead_in_mongo(gettime, nowtime))
+    schedule.every().tuesday.at("08:00").do(lead_in_mongo)
     while True:
         schedule.run_pending()
         time.sleep(1)
