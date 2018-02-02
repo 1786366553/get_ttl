@@ -9,7 +9,7 @@ import schedule
 
 
 def lead_in_mongo():
-    time_limit_left = str(datetime.now() - timedelta(days=7))[0:19]
+    time_limit_left = str(datetime.now() - timedelta(days=8))[0:19]
     time_limit_right = str(datetime.now())[0:19]
     timeArray_limit_left = time.strptime(time_limit_left, "%Y-%m-%d %H:%M:%S")
     timeStamp_limit_left = int(time.mktime(timeArray_limit_left))
@@ -54,7 +54,7 @@ def lead_in_mongo():
 
 
 if __name__ == "__main__":
-    schedule.every().tuesday.at("08:00").do(lead_in_mongo)
+    schedule.every().tuesday.at("17:00").do(lead_in_mongo)
     while True:
         schedule.run_pending()
         time.sleep(1)
