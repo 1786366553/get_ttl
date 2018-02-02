@@ -9,7 +9,6 @@ import schedule
 
 
 def lead_in_mongo():
-    print 111111
     time_limit_left = str(datetime.now() - timedelta(days=7))[0:19]
     time_limit_right = str(datetime.now())[0:19]
     timeArray_limit_left = time.strptime(time_limit_left, "%Y-%m-%d %H:%M:%S")
